@@ -2,6 +2,9 @@
 
 
 #include "Component/CollisionComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Interface/CombatAPI.h"
+#include "GameplayTagAssetInterface.h"
 
 // Sets default values for this component's properties
 UCollisionComponent::UCollisionComponent()
@@ -30,5 +33,53 @@ void UCollisionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+
+	if (bCollisionEnabled)
+	{
+
+		TArray<FHitResult> OutHits;
+
+		bool isHit = UKismetSystemLibrary::SphereTraceMultiForObjects(this,
+			CollisionMeshComponent->GetSocketLocation(StartSocketName),
+			CollisionMeshComponent->GetSocketLocation(EndSocketName),
+			TraceRadius,
+			CollisionObjectType,
+			false,
+			ActorsToIgnore,
+			EDrawDebugTrace::None,
+			OutHits,
+			true
+		);
+
+		if (isHit)
+		{
+			for (auto hit : OutHits) {
+				LastHit = hit;
+				if (!AlreadyHitActors.Contains(hit.GetActor())
+					&& Cast<IGameplayTagAssetInterface>(hit.GetActor())->HasMatchingGameplayTag(IgnoreGamePlayTag))
+				{
+					AlreadyHitActors.Add(hit.GetActor());
+					ICombatAPI* combatAPI = Cast<ICombatAPI>(hit.GetActor());
+					if (combatAPI) {
+						// Apply Effect
+					}
+				}
+				
+			}
+		}
+
+	}
+
+}
+
+void UCollisionComponent::EnableCollision()
+{
+	AlreadyHitActors.Empty();
+	bCollisionEnabled = true;
+}
+
+void UCollisionComponent::DisableCollision()
+{
+	bCollisionEnabled = false;
 }
 

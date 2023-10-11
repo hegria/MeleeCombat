@@ -40,6 +40,33 @@ public:
 	FGameplayTag InputTag_3;
 	FGameplayTag InputTag_4;
 
+	FGameplayTag Action_Attack_ChargedAttack;
+	FGameplayTag Action_Attack_FallingAttack;
+	FGameplayTag Action_Attack_LightAttack;
+	FGameplayTag Action_Attack_HeavyAttack;
+	FGameplayTag Action_Die;
+	FGameplayTag Action_Dodge;
+	FGameplayTag Action_EnterBlocking;
+	FGameplayTag Action_EnterCombat;
+	FGameplayTag Action_Executed;
+	FGameplayTag Action_ExitBlocking;
+	FGameplayTag Action_ExitCombat;
+	FGameplayTag Action_GeneralAction;
+	FGameplayTag Action_UserItem;
+
+	FGameplayTag Player;
+
+	FGameplayTag State_Attacking;
+	FGameplayTag State_Blocking;
+	FGameplayTag State_Dead;
+	FGameplayTag State_Disabled;
+	FGameplayTag State_Dodging;
+	FGameplayTag State_Executed;
+	FGameplayTag State_GeneralActionState;
+
+
+
+
 private:
 	static FMeleeGameplayTags GameplayTags;
 };

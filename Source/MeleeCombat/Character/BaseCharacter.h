@@ -5,10 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Character/CharacterStates.h"
+#include "GameplayTagAssetInterface.h"
 #include "BaseCharacter.generated.h"
 
+class USpringArmComponent;
+class UCameraComponent;
+
 UCLASS()
-class MELEECOMBAT_API ABaseCharacter : public ACharacter
+class MELEECOMBAT_API ABaseCharacter : public ACharacter, public IGameplayTagAssetInterface
 {
 	GENERATED_BODY()
 
@@ -26,5 +30,16 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
 
+	UPROPERTY()
+	TObjectPtr<USpringArmComponent> CameraBoom;
+
+	UPROPERTY()
+	TObjectPtr<UCameraComponent> ViewCamera;
+
+	FGameplayTagContainer OwnedGameplayTagContainer;
+
+	// Inherited via IGameplayTagAssetInterface
 };

@@ -32,3 +32,38 @@ void UStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// ...
 }
 
+void UStateComponent::SetCurrentState(FGameplayTag NewTag)
+{
+	if (CurrentState != NewTag)
+	{
+		OnCharacterStateEnd.Execute(CurrentState);
+		CurrentState = NewTag;
+		OnCharacterStateBegin.Execute(CurrentState);
+	}
+}
+
+void UStateComponent::SetCurrentAction(FGameplayTag NewTag)
+{
+	if (CurrentCharacterAction != NewTag)
+	{
+		OnCharacterActionEnd.Execute(CurrentCharacterAction);
+		CurrentCharacterAction = NewTag;
+		OnCharacterActionBegin.Execute(CurrentCharacterAction);
+	}
+}
+
+void UStateComponent::ResetState()
+{
+	SetCurrentState(FGameplayTag::EmptyTag);
+}
+
+bool UStateComponent::IsCurrentStateEqualToAny(FGameplayTag CheckTag)
+{
+	return CurrentState.MatchesTagExact(CheckTag);
+}
+
+bool UStateComponent::IsCurrentActionEqualToAny(FGameplayTag CheckTag)
+{
+	return CurrentCharacterAction.MatchesTagExact(CheckTag);
+}
+

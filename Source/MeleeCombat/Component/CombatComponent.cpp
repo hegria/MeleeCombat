@@ -2,6 +2,10 @@
 
 
 #include "Component/CombatComponent.h"
+#include "GameFramework/Character.h"
+#include "Character/MeleeAnimInstance.h"
+#include "Actor/Weapon/BaseWeapon.h"
+#include "Actor/Weapon/BaseConsumeable.h"
 
 // Sets default values for this component's properties
 UCombatComponent::UCombatComponent()
@@ -30,5 +34,64 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+
+void UCombatComponent::SetMainWeapon(TObjectPtr<ABaseWeapon> NewMainWeapon)
+{
+	if (MainWeapon.Get()) {
+		MainWeapon->OnUnequipped();
+		MainWeapon->Destroy();
+	}
+
+	MainWeapon = NewMainWeapon;
+}
+
+void UCombatComponent::SetShildWeapon(TObjectPtr<ABaseWeapon> NewShieldWeapon)
+{
+	ShieldWeapon = NewShieldWeapon;
+}
+
+void UCombatComponent::SetItem(TObjectPtr<ABaseConsumeable> NewItem)
+{
+	Item = NewItem;
+	//TODO
+}
+
+void UCombatComponent::SetCombatEnable(bool isCombatEnable)
+{
+	bIsCombatEnable = isCombatEnable;
+
+	ACharacter* Char = Cast<ACharacter>(GetOwner());
+	UMeleeAnimInstance* Anim = Cast<UMeleeAnimInstance>(Char->GetMesh()->GetAnimInstance());
+
+	Anim->SetIsCombatEnabled(isCombatEnable);
+
+	//TODO AI
+}
+
+void UCombatComponent::ResetAttack()
+{
+	AttackCount = 0;
+	bIsAttackSaved = false;
+	bIsWaitForAttack = false;
+}
+
+void UCombatComponent::SetBlockingEnable(bool isBlockingEnable)
+{
+	if (isBlockingEnable != bIsBlockingEnable)
+	{
+		bIsBlockingEnable = isBlockingEnable;
+
+		ACharacter* Char = Cast<ACharacter>(GetOwner());
+		UMeleeAnimInstance* Anim = Cast<UMeleeAnimInstance>(Char->GetMesh()->GetAnimInstance());
+
+		Anim->SetIsBlockingEnabled(bIsBlockingEnable);
+	}
+}
+
+void UCombatComponent::ConsumeItem()
+{
+	Item->OnItemConsumed();
 }
 

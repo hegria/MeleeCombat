@@ -7,6 +7,9 @@
 #include "CombatComponent.generated.h"
 
 
+class ABaseWeapon;
+class ABaseConsumeable;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MELEECOMBAT_API UCombatComponent : public UActorComponent
 {
@@ -24,5 +27,33 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	void SetMainWeapon(TObjectPtr<ABaseWeapon> NewMainWeapon);
+	void SetShildWeapon(TObjectPtr<ABaseWeapon> NewShieldWeapon);
+	void SetItem(TObjectPtr<ABaseConsumeable> NewItem);
+	void SetCombatEnable(bool isCombatEnable);
+	void ResetAttack();
+	void SetBlockingEnable(bool isBlockingEnable);
+	void ConsumeItem();
+
+
+	FORCEINLINE TObjectPtr<ABaseWeapon> GetMainWeapon() { return MainWeapon; };
+	FORCEINLINE TObjectPtr<ABaseWeapon> GetShieldWeapon() { return ShieldWeapon; };
+	FORCEINLINE TObjectPtr<ABaseConsumeable> GetItem() { return Item; };
+	FORCEINLINE bool IsCombatEnable() { return bIsCombatEnable; };
+	FORCEINLINE bool IsBlockingEnable() { return bIsBlockingEnable; };
+
+private:
+	UPROPERTY()
+	TObjectPtr<ABaseWeapon> MainWeapon;
+	UPROPERTY()
+	TObjectPtr<ABaseWeapon> ShieldWeapon;
+	UPROPERTY()
+	TObjectPtr<ABaseConsumeable> Item;
+
+	int AttackCount;
+	bool bIsCombatEnable;
+	bool bIsAttackSaved;
+	bool bIsBlockingEnable;
+	bool bIsWaitForAttack;
+	
 };

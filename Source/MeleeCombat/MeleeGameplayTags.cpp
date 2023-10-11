@@ -115,4 +115,93 @@ void FMeleeGameplayTags::InitializeNativeGameplayTags()
 		FName("InputTag.4"),
 		FString("Input Tag for 4 key")
 	);
+
+	GameplayTags.Action_Attack_ChargedAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.ChargedAttack"),
+		FString("")
+	);
+	GameplayTags.Action_Attack_FallingAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.FallingAttack"),
+		FString("")
+	);
+	GameplayTags.Action_Attack_LightAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.LightAttack"),
+		FString("")
+	);
+	GameplayTags.Action_Attack_HeavyAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.HeavyAttack"),
+		FString("")
+	);
+	GameplayTags.Action_Die = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.Die"),
+		FString("")
+	);
+	GameplayTags.Action_Dodge = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.Dodge"),
+		FString("")
+	);
+	GameplayTags.Action_EnterBlocking = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.EnterBlocking"),
+		FString("")
+	);
+	GameplayTags.Action_EnterCombat = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.EnterCombat"),
+		FString("")
+	);
+	GameplayTags.Action_Executed = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.Executed"),
+		FString("")
+	);
+	GameplayTags.Action_ExitBlocking = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.ExitBlocking"),
+		FString("")
+	);
+	GameplayTags.Action_ExitCombat = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.ExitCombat"),
+		FString("")
+	);
+	GameplayTags.Action_GeneralAction = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.GeneralAction"),
+		FString("")
+	);
+	GameplayTags.Action_UserItem = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.UserItem"),
+		FString("")
+	);
+
+
+	GameplayTags.Player = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Player"),
+		FString("")
+	);
+
+	GameplayTags.State_Attacking = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.State.Attacking"),
+		FString("")
+	);
+	GameplayTags.State_Blocking = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.State.Blocking"),
+		FString("")
+	);
+	GameplayTags.State_Dead = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.State.Dead"),
+		FString("")
+	);
+	GameplayTags.State_Disabled = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.State.Disabled"),
+		FString("")
+	);
+	GameplayTags.State_Dodging = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.State.Dodging"),
+		FString("")
+	);
+	GameplayTags.State_Executed = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.State.Executed"),
+		FString("")
+	);
+	GameplayTags.State_GeneralActionState = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.State.GeneralActionState"),
+		FString("")
+	);
+
 }
