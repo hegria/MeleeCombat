@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameplayTagContainer.h"
 #include "CollisionComponent.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -23,8 +24,8 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void EnableCollision();
-	void DisableCollision();
+	void ActivateCollision();
+	void DeactivateCollision();
 
 	FORCEINLINE void AddActorsToIgnore(AActor* actor) { ActorsToIgnore.AddUnique(actor); }
 	FORCEINLINE void RemoveActorsToIgnore(AActor* actor) { ActorsToIgnore.Remove(actor); }

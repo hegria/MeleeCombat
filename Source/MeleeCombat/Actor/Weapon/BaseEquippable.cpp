@@ -13,7 +13,7 @@ ABaseEquippable::ABaseEquippable()
 	PrimaryActorTick.bCanEverTick = true;
 
 	ItemSkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ItemSkeletalMesh"));
-	ItemStaticMesh = CreateDefaultSubobject<UStaticMesh>(TEXT("ItemStaticMesh"));
+	ItemStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemStaticMesh"));
 
 }
 

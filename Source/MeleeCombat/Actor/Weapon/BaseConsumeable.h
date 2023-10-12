@@ -16,6 +16,17 @@ class MELEECOMBAT_API ABaseConsumeable : public ABaseEquippable
 	
 
 public:
+
+	void OnEquipped() override;
+	void OnUnequipped() override;
 	void OnItemConsumed();
+
+	FORCEINLINE TArray<UAnimMontage*> GetUseItemMontages() { return UseItemMontages; }
+	bool GetRemainingItemsCount(int& OutNumberInBackpack);
+	UPROPERTY()
+	TArray<UAnimMontage*> UseItemMontages;
+	
+	int NumberOfUsed;
+	int NumberInBagpack;
 
 };

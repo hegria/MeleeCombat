@@ -34,8 +34,8 @@ public:
 	virtual FRotator GetDesireRotation() = 0;
 	virtual ESpeedMode GetSpeedMode() = 0;
 	virtual void PerformDeath(TArray<AActor*>&ActorToDestory, float& Duration ) =0;
-	virtual bool PerformHitReaction(EDamageType DamageType, FVector HitLocation, float Damage) =0;
+	virtual bool PerformHitReaction(EDamegeType DamageType, FVector HitLocation, float Damage) =0;
 	virtual bool PerformUseItem(FGameplayTag CharacterState, FGameplayTag CharacterAction, float MontagePlayRate, int MontageIndex, bool isRandomIndex, OUT float& ActionDuration) =0;
 	virtual bool PerformAction(FGameplayTag CharacterState, FGameplayTag CharacterAction, float MontagePlayRate, int MontageIndex, bool isRandomIndex, OUT float& ActionDuration) =0;
-	virtual bool PerformAttack(FGameplayTag CharacterState, FGameplayTag CharacterAction, float MontagePlayRate, int MontageIndex, bool isRandomIndex, OUT float& ActionDuration) =0;
+	virtual bool PerformAttack(FGameplayTag AttackType, int MontageIndex, bool isRandomIndex, bool isCalledbyAI, float PlayRate, OUT float& ActionDuration) =0;
 };

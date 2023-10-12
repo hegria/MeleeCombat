@@ -35,6 +35,15 @@ UENUM(BlueprintType)
 enum class EDamegeType : uint8
 {
 	EDT_None,
-	ESM_MeleeDamage,
-	ESM_KnockdownDamage,
+	EDT_MeleeDamage,
+	EDT_KnockdownDamage,
+};
+
+UENUM(BlueprintType)
+enum class EHitDirection : uint8
+{
+	EHD_Front,
+	EHD_Back,
+	EHD_Left,
+	EHD_Right,
 };

@@ -57,13 +57,13 @@ void UStateComponent::ResetState()
 	SetCurrentState(FGameplayTag::EmptyTag);
 }
 
-bool UStateComponent::IsCurrentStateEqualToAny(FGameplayTag CheckTag)
+bool UStateComponent::IsCurrentStateEqualToAny(FGameplayTagContainer CheckTag)
 {
-	return CurrentState.MatchesTagExact(CheckTag);
+	return CurrentState.MatchesAnyExact(CheckTag);
 }
 
-bool UStateComponent::IsCurrentActionEqualToAny(FGameplayTag CheckTag)
+bool UStateComponent::IsCurrentActionEqualToAny(FGameplayTagContainer CheckTag)
 {
-	return CurrentCharacterAction.MatchesTagExact(CheckTag);
+	return CurrentCharacterAction.MatchesAnyExact(CheckTag);
 }
 

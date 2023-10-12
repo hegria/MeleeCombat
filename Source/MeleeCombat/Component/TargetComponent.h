@@ -42,7 +42,7 @@ public:
 	void ToggleLockOn();
 
 	FORCEINLINE bool IsTargeting() { return bIsTargeting; };
-	FORCEINLINE TObjectPtr<ACharacter> GetTargetActor() { return TargetActor; };
+	FORCEINLINE TObjectPtr<AActor> GetTargetActor() { return TargetActor; };
 	FORCEINLINE ERotationMode GetRotationMode() { return CurrentRotationMode; };
 
 protected:

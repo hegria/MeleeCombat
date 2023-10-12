@@ -3,6 +3,7 @@
 
 #include "Character/MeleeAnimInstance.h"
 #include "Character/BaseCharacter.h"
+#include "KismetAnimationLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 void UMeleeAnimInstance::NativeInitializeAnimation()
@@ -17,7 +18,7 @@ void UMeleeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 {
 	Velocity = CharacterMovementComponent->Velocity;
 	GroundSpeed = Velocity.Size2D();
-	Direction = CalculateDirection(Velocity, Character->GetActorRotation());
+	Direction = UKismetAnimationLibrary::CalculateDirection(Velocity, Character->GetActorRotation());
 	bShouldMove = GroundSpeed > 0 && CharacterMovementComponent->GetCurrentAcceleration() != FVector::Zero();
 	bIsFalling = CharacterMovementComponent->IsFalling();
 }

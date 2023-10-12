@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Components/TimelineComponent.h"
 #include "CombatComponent.generated.h"
 
 
 class ABaseWeapon;
 class ABaseConsumeable;
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MELEECOMBAT_API UCombatComponent : public UActorComponent
@@ -41,6 +43,8 @@ public:
 	FORCEINLINE TObjectPtr<ABaseConsumeable> GetItem() { return Item; };
 	FORCEINLINE bool IsCombatEnable() { return bIsCombatEnable; };
 	FORCEINLINE bool IsBlockingEnable() { return bIsBlockingEnable; };
+	
+	int AttackCount;
 
 private:
 	UPROPERTY()
@@ -49,11 +53,11 @@ private:
 	TObjectPtr<ABaseWeapon> ShieldWeapon;
 	UPROPERTY()
 	TObjectPtr<ABaseConsumeable> Item;
-
-	int AttackCount;
+	
 	bool bIsCombatEnable;
 	bool bIsAttackSaved;
 	bool bIsBlockingEnable;
 	bool bIsWaitForAttack;
-	
+
+	// TODO Callback
 };

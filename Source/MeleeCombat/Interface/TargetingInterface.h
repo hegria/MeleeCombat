@@ -23,6 +23,7 @@ class MELEECOMBAT_API ITargetingInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual bool CanbeTargeted() = 0;
+	virtual void EnableLockOn(bool EnableLockon) = 0;
 	virtual void OnTargeted(bool IsTargeted) = 0;
-
+	
 };

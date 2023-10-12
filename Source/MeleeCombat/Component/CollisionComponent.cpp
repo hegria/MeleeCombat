@@ -72,13 +72,13 @@ void UCollisionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 }
 
-void UCollisionComponent::EnableCollision()
+void UCollisionComponent::ActivateCollision()
 {
 	AlreadyHitActors.Empty();
 	bCollisionEnabled = true;
 }
 
-void UCollisionComponent::DisableCollision()
+void UCollisionComponent::DeactivateCollision()
 {
 	bCollisionEnabled = false;
 }

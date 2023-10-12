@@ -10,6 +10,9 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 
+#define GET_MELEE_TAG FMeleeGameplayTags::Get()
+
+
 struct FMeleeGameplayTags
 {
 public:
@@ -33,17 +36,25 @@ public:
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
 
-	FGameplayTag InputTag_LMB;
-	FGameplayTag InputTag_RMB;
-	FGameplayTag InputTag_1;
-	FGameplayTag InputTag_2;
-	FGameplayTag InputTag_3;
-	FGameplayTag InputTag_4;
+	FGameplayTag InputTag_Block;
+	FGameplayTag InputTag_Dodge;
+	FGameplayTag InputTag_HeavyAttack;
+	FGameplayTag InputTag_Interact;
+	FGameplayTag InputTag_Jump;
+	FGameplayTag InputTag_LightAttack;
+	FGameplayTag InputTag_Look;
+	FGameplayTag InputTag_Move;
+	FGameplayTag InputTag_Sprint;
+	FGameplayTag InputTag_ToggleCombat;
+	FGameplayTag InputTag_ToggleLock;
+	FGameplayTag InputTag_ToggleWalk;
+	FGameplayTag InputTag_UserItem;
 
 	FGameplayTag Action_Attack_ChargedAttack;
 	FGameplayTag Action_Attack_FallingAttack;
 	FGameplayTag Action_Attack_LightAttack;
 	FGameplayTag Action_Attack_HeavyAttack;
+	FGameplayTag Action_Attack_SprintAttack;
 	FGameplayTag Action_Die;
 	FGameplayTag Action_Dodge;
 	FGameplayTag Action_EnterBlocking;

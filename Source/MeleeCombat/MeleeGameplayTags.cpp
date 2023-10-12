@@ -86,35 +86,59 @@ void FMeleeGameplayTags::InitializeNativeGameplayTags()
 	 * Input Tags
 	 */
 
-	GameplayTags.InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("InputTag.LMB"),
-		FString("Input Tag for Left Mouse Button")
+	GameplayTags.InputTag_Block = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.Block"),
+		FString("")
+	);
+	GameplayTags.InputTag_Dodge = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.Dodge"),
+		FString("")
+	);
+	GameplayTags.InputTag_HeavyAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.HeavyAttack"),
+		FString("")
+	);
+	GameplayTags.InputTag_Interact = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.Interact"),
+		FString("")
+	);
+	GameplayTags.InputTag_Jump = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.Jump"),
+		FString("")
+	);
+	GameplayTags.InputTag_LightAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.LightAttack"),
+		FString("")
+	);
+	GameplayTags.InputTag_Look = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.Look"),
+		FString("")
+	);
+	GameplayTags.InputTag_Move = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.Move"),
+		FString("")
+	);
+	GameplayTags.InputTag_Sprint = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.Sprint"),
+		FString("")
+	);
+	GameplayTags.InputTag_ToggleCombat = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.ToggleCombat"),
+		FString("")
+	);
+	GameplayTags.InputTag_ToggleLock = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.ToggleLock"),
+		FString("")
+	);
+	GameplayTags.InputTag_ToggleWalk = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.ToggleWalk"),
+		FString("")
+	);
+	GameplayTags.InputTag_UserItem = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("InputTag.UserItem"),
+		FString("")
 	);
 
-	GameplayTags.InputTag_RMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("InputTag.RMB"),
-		FString("Input Tag for Right Mouse Button")
-	);
-
-	GameplayTags.InputTag_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("InputTag.1"),
-		FString("Input Tag for 1 key")
-	);
-
-	GameplayTags.InputTag_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("InputTag.2"),
-		FString("Input Tag for 2 key")
-	);
-
-	GameplayTags.InputTag_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("InputTag.3"),
-		FString("Input Tag for 3 key")
-	);
-
-	GameplayTags.InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("InputTag.4"),
-		FString("Input Tag for 4 key")
-	);
 
 	GameplayTags.Action_Attack_ChargedAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Character.Action.ChargedAttack"),
@@ -130,6 +154,10 @@ void FMeleeGameplayTags::InitializeNativeGameplayTags()
 	);
 	GameplayTags.Action_Attack_HeavyAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Character.Action.HeavyAttack"),
+		FString("")
+	);
+	GameplayTags.Action_Attack_SprintAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Character.Action.SprintAttack"),
 		FString("")
 	);
 	GameplayTags.Action_Die = UGameplayTagsManager::Get().AddNativeGameplayTag(

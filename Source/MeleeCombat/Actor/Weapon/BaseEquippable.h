@@ -34,13 +34,13 @@ public:
 	FORCEINLINE bool GetIsEquipped() { return bIsEquipped; }
 	FORCEINLINE void SetIsEquipped(bool isEquippeed) { bIsEquipped = isEquippeed; }
 
-	FORCEINLINE TObjectPtr<UStaticMesh> GetItemMesh() { return ItemStaticMesh; }
+	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetItemMesh() { return ItemStaticMesh; }
 
 protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USkeletalMeshComponent> ItemSkeletalMesh;
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<UStaticMesh> ItemStaticMesh;
+	TObjectPtr<UStaticMeshComponent> ItemStaticMesh;
 
 	UPROPERTY(EditAnywhere)
 	FName AttachSocketName;

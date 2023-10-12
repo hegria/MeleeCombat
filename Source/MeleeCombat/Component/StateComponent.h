@@ -31,8 +31,8 @@ public:
 	void ResetState();
 	FORCEINLINE FGameplayTag GetCurrentState() { return CurrentState; };
 	FORCEINLINE FGameplayTag GetCurrentAction() { return CurrentCharacterAction; };
-	bool IsCurrentStateEqualToAny(FGameplayTag CheckTag);
-	bool IsCurrentActionEqualToAny(FGameplayTag CheckTag);
+	bool IsCurrentStateEqualToAny(FGameplayTagContainer CheckTag);
+	bool IsCurrentActionEqualToAny(FGameplayTagContainer CheckTag);
 
 	FOnStateChanged OnCharacterStateBegin;
 	FOnStateChanged OnCharacterStateEnd;

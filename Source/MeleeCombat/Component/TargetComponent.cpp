@@ -18,12 +18,7 @@ UTargetComponent::UTargetComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	OwnerCharacter = Cast<ACharacter>(GetOwner());
-	OwnerController = OwnerCharacter->GetController();
 	
-	FollowCamera = OwnerCharacter->GetComponentByClass<UCameraComponent>();
-	OwnerCombatComponent = OwnerCharacter->GetComponentByClass<UCombatComponent>();
-	// ...
 }
 
 
@@ -33,7 +28,12 @@ void UTargetComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	ActorsToIgnore.AddUnique(GetOwner());
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	OwnerController = OwnerCharacter->GetController();
+
+	FollowCamera = OwnerCharacter->GetComponentByClass<UCameraComponent>();
+	OwnerCombatComponent = OwnerCharacter->GetComponentByClass<UCombatComponent>();
+	// ...
 }
 
 
@@ -94,7 +94,7 @@ void UTargetComponent::UpdateTargetingControlRotation()
 {
 	if (IsValid(TargetActor) && IsValid(OwnerController))
 	{
-		if (CanTargetActor)
+		if (CanTargetActor(TargetActor))
 		{
 			const FRotator ControllerRotation = OwnerController->GetControlRotation();
 
@@ -178,7 +178,7 @@ void UTargetComponent::EnableLockOn(bool CalledByAI)
 	}
 	else if (OwnerCombatComponent->IsCombatEnable())
 	{
-		AActor* result;
+		AActor* result = nullptr;
 		if (FindTarget(result) && CanTargetActor(result))
 		{
 			SetTargetActor(result);
@@ -199,9 +199,9 @@ void UTargetComponent::DisableLockOn()
 
 void UTargetComponent::ToggleLockOn()
 {
-	if (IsTargeting)
+	if (IsTargeting())
 	{
-		DisableLockOn()
+		DisableLockOn();
 	}
 	else
 	{
