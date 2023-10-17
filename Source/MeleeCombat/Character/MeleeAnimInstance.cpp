@@ -5,20 +5,31 @@
 #include "Character/BaseCharacter.h"
 #include "KismetAnimationLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Component/CombatComponent.h"
 
 void UMeleeAnimInstance::NativeInitializeAnimation()
 {
-	Character = Cast<ABaseCharacter>(GetOwningActor());
+	Super::NativeInitializeAnimation();
 
-	CharacterMovementComponent = Character->GetCharacterMovement();
+	Character = Cast<ABaseCharacter>(TryGetPawnOwner());
+	if (Character)
+	{
+		CharacterMovementComponent = Character->GetCharacterMovement();
+	}
 
 }
 
 void UMeleeAnimInstance::NativeUpdateAnimation(float DeltaTime)
 {
-	Velocity = CharacterMovementComponent->Velocity;
-	GroundSpeed = Velocity.Size2D();
-	Direction = UKismetAnimationLibrary::CalculateDirection(Velocity, Character->GetActorRotation());
-	bShouldMove = GroundSpeed > 0 && CharacterMovementComponent->GetCurrentAcceleration() != FVector::Zero();
-	bIsFalling = CharacterMovementComponent->IsFalling();
+	Super::NativeUpdateAnimation(DeltaTime);
+
+	if (CharacterMovementComponent)
+	{
+		Velocity = CharacterMovementComponent->Velocity;
+		GroundSpeed = Velocity.Size2D();
+		Direction = UKismetAnimationLibrary::CalculateDirection(Velocity, Character->GetActorRotation());
+		bShouldMove = GroundSpeed > 0 && CharacterMovementComponent->GetCurrentAcceleration() != FVector::Zero();
+		bIsFalling = CharacterMovementComponent->IsFalling();
+		bBlockingEnabled = Character->CombatComponent->IsBlockingEnable();
+	}
 }

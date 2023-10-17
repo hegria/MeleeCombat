@@ -7,7 +7,6 @@
 #include "GameplayTagContainer.h"
 #include "StateComponent.generated.h"
 
-
 DECLARE_DELEGATE_OneParam(FOnStateChanged, const FGameplayTag&)
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -29,6 +28,8 @@ public:
 	void SetCurrentState(FGameplayTag NewTag);
 	void SetCurrentAction(FGameplayTag NewTag);
 	void ResetState();
+
+	UFUNCTION(BlueprintPure)
 	FORCEINLINE FGameplayTag GetCurrentState() { return CurrentState; };
 	FORCEINLINE FGameplayTag GetCurrentAction() { return CurrentCharacterAction; };
 	bool IsCurrentStateEqualToAny(FGameplayTagContainer CheckTag);

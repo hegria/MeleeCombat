@@ -7,6 +7,9 @@
 #include "Character/CharacterStates.h"
 #include "TargetComponent.generated.h"
 
+
+DECLARE_DELEGATE(FOnDisabledLockOn)
+
 class AController;
 class ACharacter;
 class UCameraComponent;
@@ -31,7 +34,7 @@ public:
 
 
 	void SetIsTargeting(bool IsTargeting);
-	bool FindTarget(OUT AActor* Result);
+	bool FindTarget(OUT AActor*& Result);
 	void SetTargetActor(AActor* NewTargetActor);
 	void UpdateTargetingControlRotation();
 	bool CanTargetActor(AActor* InTargetActor);
@@ -41,16 +44,24 @@ public:
 	void DisableLockOn();
 	void ToggleLockOn();
 
+
+
 	FORCEINLINE bool IsTargeting() { return bIsTargeting; };
 	FORCEINLINE TObjectPtr<AActor> GetTargetActor() { return TargetActor; };
 	FORCEINLINE ERotationMode GetRotationMode() { return CurrentRotationMode; };
 
+	FOnDisabledLockOn DisabledLockOn;
 protected:
+	UPROPERTY(EditAnywhere)
 	TArray<TEnumAsByte<EObjectTypeQuery>> TargetObjectType;
+	UPROPERTY(EditAnywhere)
 	float TargetingRadius;
+	UPROPERTY(EditAnywhere)
 	float TargetingDistance;
+	UPROPERTY(EditAnywhere)
 	float TargetRotationInterpSpeed;
-	float DefulatRotationMode;
+	UPROPERTY(EditAnywhere)
+	ERotationMode DefalutRotationMode = ERotationMode::ERM_OrientToMovement;
 	
 	UPROPERTY()
 	TArray<AActor*> ActorsToIgnore;

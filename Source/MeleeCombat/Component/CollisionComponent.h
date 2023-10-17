@@ -7,6 +7,8 @@
 #include "GameplayTagContainer.h"
 #include "CollisionComponent.generated.h"
 
+DECLARE_DELEGATE_OneParam(FONHIT, const FHitResult&)
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MELEECOMBAT_API UCollisionComponent : public UActorComponent
 {
@@ -38,17 +40,24 @@ public:
 	FORCEINLINE TObjectPtr<UMeshComponent> GetCollisionMeshComponent() { return CollisionMeshComponent; }
 	FORCEINLINE void SetCollisionMeshComponent(TObjectPtr<UMeshComponent> _CollisionMeshComponent) { this->CollisionMeshComponent = _CollisionMeshComponent; }
 
+	FONHIT OnHit;
+
 private:
 	UPROPERTY()
 	TObjectPtr<UMeshComponent> CollisionMeshComponent;
 	
 
-
+	UPROPERTY(EditAnywhere);
 	FName StartSocketName;
+	UPROPERTY(EditAnywhere);
 	FName EndSocketName;
+	UPROPERTY(EditAnywhere);
 	float TraceRadius;
+	UPROPERTY(EditAnywhere);
 	TArray<TEnumAsByte<EObjectTypeQuery>> CollisionObjectType;
+	UPROPERTY(EditAnywhere);
 	TArray<AActor *> ActorsToIgnore;
+	UPROPERTY(EditAnywhere);
 	FGameplayTag IgnoreGamePlayTag;
 
 	bool bCollisionEnabled;

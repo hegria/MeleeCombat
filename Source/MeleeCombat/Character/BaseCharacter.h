@@ -20,6 +20,10 @@ class UCombatComponent;
 class UStateComponent;
 class UTargetComponent;
 class UEquipmentComponent;
+class UAbilitySystemComponent;
+class UGameplayEffect;
+class UGameplayAbility;
+class UMeleeAttributeSet;
 
 UCLASS()
 class MELEECOMBAT_API ABaseCharacter : public ACharacter, public IGameplayTagAssetInterface, public ITargetingInterface,
@@ -34,10 +38,18 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+public:	
+	virtual void Tick(float DeltaTime) override;
 
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
 	void ContinueAttack();
 	void ResetCombat();
-	void PointDamage();
+	void SetMovable(bool CanMove);
+	void BeginRotateToTarget();
+	void StopRotateToTarget();
+	void Landed(const FHitResult& Hit) override;
 
 	bool CanPerformToggleCombat();
 	bool CanPerformAttack();
@@ -58,99 +70,27 @@ protected:
 	void DisableSprinting(bool IsForceExitSprinting);
 	void ChargeAttacktimer(float PressTime);
 	void EnableRagdoll();
-	FORCEINLINE EHitDirection GetHitDirection() { return HitDirection; }
 	void ApplyHitReactionPhysicsVeclocity(float InitialSpeed);
-
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	EHitDirection GetHitDirection(FVector HitLocation);
+	void ModifyStamina(float amt);
 	
-	void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
-
-	UPROPERTY()
-	TObjectPtr<USpringArmComponent> CameraBoom;
-
-	UPROPERTY()
-	TObjectPtr<UCameraComponent> ViewCamera;
-
-	FGameplayTagContainer OwnedGameplayTags;
-	FGameplayTagContainer IgnoreGameplayTags;
-
-	float MaxWalkingSpeed;
-	float MaxJogginSepeed;
-	float MaxSprintingSpeed;
-
-	UPROPERTY()
-	TObjectPtr<UAnimMontage> UnarmHitMontage_F;
-	UPROPERTY()
-	TObjectPtr<UAnimMontage> UnarmHitMontage_B;
-	UPROPERTY()
-	TObjectPtr<UAnimMontage> UnarmHitMontage_L;
-	UPROPERTY()
-	TObjectPtr<UAnimMontage> UnarmHitMontage_R;
-	UPROPERTY()
-	TObjectPtr<UAnimMontage> KnockdownMontage_F;
-	UPROPERTY()
-	TObjectPtr<UAnimMontage> KnockdownMontage_B;
-
-	FName PelvisBoneName;
-	ESpeedMode SpeedMode;
-	bool bCanMove;
-	bool bIsCharged;
-	bool bIsHeavyAttack;
-	bool bIsForceExitSprinting;
-
-	float ChargeTime;
-	float ChargeAttackTime;
-	float SprintingInputDeltaTime;
-
-	EHitDirection HitDirection;
-
-
-	UPROPERTY()
-	TObjectPtr<UCombatComponent> CombatComponent;
-	UPROPERTY()
-	TObjectPtr<UStateComponent> StateComponent;
-	UPROPERTY()
-	TObjectPtr<UTargetComponent> TargetingComponent;
-	UPROPERTY()
-	TObjectPtr<UEquipmentComponent> EquipmentComponent;
-
-
-	float DeltaTime;
-
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTimelineComponent* ExampleTimelineComp;
-
-public:
-	UPROPERTY(EditAnywhere)
-	UCurveFloat* TimelineCurve;
-
-private:
-	UPROPERTY()
-	UTimelineComponent* RotateToTargetTimeLineComponent;
-	UPROPERTY(EditAnywhere, Category = "Timeline")
-	FTimeline RotateToTargetTimeLine;
-
-	FOnTimelineFloat RotateToTargetTimeLineUpdateDelegate;
-
 	UFUNCTION()
 	void RotateToTargetUpdate(float Output);
+	UFUNCTION()
+	void MoveToTargetupdate(float Output);
 
+	virtual void InitAbilityActorInfo() {};
+
+	void InitializeDefaultAttributes();
+	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level);
+	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level, FGameplayTag Tag, float amt);
 
 	// Inherited via ITargetingInterface
 	bool CanbeTargeted() override;
 	void EnableLockOn(bool EnableLockon) override;
 	void OnTargeted(bool IsTargeted) override;
-
 	// Inherited via ICombatInterface
 	void RotateToActor(AActor* Excutor) override;
-	void JumpTo(float FlightTime) override;
 	void MoveTo(FVector Start, FVector End) override;
 	void ConsumeItem() override;
 	bool CanRecieveDamage() override;
@@ -158,10 +98,108 @@ private:
 	FRotator GetDesireRotation() override;
 	ESpeedMode GetSpeedMode() override;
 	void PerformDeath(TArray<AActor*>& ActorToDestory, float& Duration) override;
-	bool PerformHitReaction(EDamegeType DamageType, FVector HitLocation, float Damage) override;
+	bool PerformHitReaction(EDamageType DamageType, FVector HitLocation, float Damage) override;
 	bool PerformUseItem(FGameplayTag CharacterState, FGameplayTag CharacterAction, float MontagePlayRate, int MontageIndex, bool isRandomIndex, OUT float& ActionDuration) override;
-	bool PerformAction(FGameplayTag CharacterState, FGameplayTag CharacterAction, float MontagePlayRate, int MontageIndex, bool isRandomIndex, OUT float& ActionDuration) override;
-
+	UFUNCTION(BlueprintCallable)
+	bool PerformAction(FGameplayTag CharacterState, FGameplayTag CharacterAction, float MontagePlayRate, int MontageIndex, bool isRandomIndex, float& ActionDuration) override;
 	// Inherited via ICombatInterface
-	bool PerformAttack(FGameplayTag AttackType, int MontageIndex, bool isRandomIndex, bool isCalledbyAI, float PlayRate, OUT float& ActionDuration) override;
+	UFUNCTION(BlueprintCallable)
+	bool PerformAttack(FGameplayTag AttackType, int MontageIndex, bool isRandomIndex, bool isCalledbyAI, float PlayRate, float& ActionDuration) override;
+	void HandlePointDamage(const FHitResult& HitInfo, float Damage, EDamageType DamageType, FVector HitLocation) override;
+
+	UFUNCTION()
+	virtual void OnCharacterActionBegin(const FGameplayTag& Action);
+	UFUNCTION()
+	virtual void OnCharacterActionEnd(const FGameplayTag& Action);
+	UFUNCTION()
+	void OnCharacterStateBegin(const FGameplayTag& Action);
+	UFUNCTION()
+	void OnCharacterStateEnd(const FGameplayTag& Action);
+
+	float DeltaTime;
+
+
+	UPROPERTY(EditAnywhere, Category = "GameplayTags")
+	FGameplayTagContainer OwnedGameplayTags;
+	UPROPERTY(EditAnywhere, Category = "GameplayTags")
+	FGameplayTagContainer IgnoreGameplayTags;
+
+	UPROPERTY(EditAnywhere, Category = "MovemntSpeed")
+	float MaxWalkingSpeed;
+	UPROPERTY(EditAnywhere, Category = "MovemntSpeed")
+	float MaxJogginSepeed;
+	UPROPERTY(EditAnywhere, Category = "MovemntSpeed")
+	float MaxSprintingSpeed;
+
+	UPROPERTY(EditAnywhere, Category = "Montages")
+	TObjectPtr<UAnimMontage> UnarmHitMontage_F;
+	UPROPERTY(EditAnywhere, Category = "Montages")
+	TObjectPtr<UAnimMontage> UnarmHitMontage_B;
+	UPROPERTY(EditAnywhere, Category = "Montages")
+	TObjectPtr<UAnimMontage> UnarmHitMontage_L;
+	UPROPERTY(EditAnywhere, Category = "Montages")
+	TObjectPtr<UAnimMontage> UnarmHitMontage_R;
+	UPROPERTY(EditAnywhere, Category = "Montages")
+	TObjectPtr<UAnimMontage> KnockdownMontage_F;
+	UPROPERTY(EditAnywhere, Category = "Montages")
+	TObjectPtr<UAnimMontage> KnockdownMontage_B;
+
+	FName PelvisBoneName;
+	ESpeedMode SpeedMode;
+	UPROPERTY(EditAnywhere)
+	bool bCanMove;
+	UPROPERTY(EditAnywhere)
+	bool bIsCharged;
+	UPROPERTY(EditAnywhere)
+	bool bIsHeavyAttack;
+	UPROPERTY(EditAnywhere)
+	bool bIsForceExitSprinting;
+	float ChargeTime;
+	UPROPERTY(EditAnywhere)
+	float ChargeAttackTime;
+	float SprintingInputDeltaTime;
+
+	EHitDirection HitDirection;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USpringArmComponent> CameraBoom;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UCameraComponent> ViewCamera;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UCombatComponent> CombatComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UStateComponent> StateComponent;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UTargetComponent> TargetingComponent;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UEquipmentComponent> EquipmentComponent;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	UPROPERTY()
+	UTimelineComponent* RotateToTargetTimeLineComponent;
+	
+	// Timeline
+public:
+	UPROPERTY(EditAnywhere, Category = "Timeline")
+	UCurveFloat* TimelineCurve;
+	UPROPERTY()
+	FTimeline MoveToTargetTimeLine;
+	FOnTimelineFloat RotateToTargetTimeLineUpdateDelegate;
+	FOnTimelineFloat MoveToTargetTimeLineUpdateDelegate;
+	FVector StartMoveTo;
+	FVector EndMoveTo;
+
+public:
+	UPROPERTY(EditAnywhere, Category = "Abilities")
+	float StaminaRegenRate;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> UseStaminaEffect;
+	UPROPERTY()
+	TObjectPtr<UMeleeAttributeSet> AttributeSet;
+	UPROPERTY(EditAnywhere, Category = "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 };

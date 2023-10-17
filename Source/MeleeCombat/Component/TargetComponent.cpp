@@ -10,6 +10,8 @@
 #include "Interface/TargetingInterface.h"
 #include "Interface/CombatInterface.h"
 #include "Camera/CameraComponent.h"
+#include "TimerManager.h"
+
 
 // Sets default values for this component's properties
 UTargetComponent::UTargetComponent()
@@ -59,8 +61,9 @@ void UTargetComponent::SetIsTargeting(bool IsTargeting)
 	}
 }
 
-bool UTargetComponent::FindTarget(OUT AActor* Result)
+bool UTargetComponent::FindTarget(OUT AActor*& Result)
 {
+	Result = nullptr;
 
 	FHitResult OnHit;
 
@@ -156,7 +159,10 @@ void UTargetComponent::UpdateRotationMode()
 			&& OwnerCombatComponent->IsCombatEnable()
 			&& bIsTargeting)
 			mode = ERotationMode::ERM_OrientToCamera;
+		else
+			mode = DefalutRotationMode;
 	}
+	
 
 	SetRotationMode(mode);
 }
@@ -179,7 +185,8 @@ void UTargetComponent::EnableLockOn(bool CalledByAI)
 	else if (OwnerCombatComponent->IsCombatEnable())
 	{
 		AActor* result = nullptr;
-		if (FindTarget(result) && CanTargetActor(result))
+		if (!FindTarget(result)) return;
+		if (IsValid(result) && CanTargetActor(result))
 		{
 			SetTargetActor(result);
 			SetIsTargeting(true);
@@ -194,7 +201,14 @@ void UTargetComponent::DisableLockOn()
 	SetTargetActor(nullptr);
 	UpdateRotationMode();
 
-	// TODO AI한테 알리기 ㅅㅂ;
+	FTimerDelegate timerCallback;
+	timerCallback.BindLambda([this] {
+		if(DisabledLockOn.IsBound())
+			DisabledLockOn.Execute();
+		});
+	FTimerHandle timerHandle;
+	GetWorld()->GetTimerManager().SetTimer(timerHandle, timerCallback, 2.0f, false);
+
 }
 
 void UTargetComponent::ToggleLockOn()

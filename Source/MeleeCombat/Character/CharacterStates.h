@@ -13,6 +13,11 @@ UENUM(BlueprintType)
 enum class ECollisionPart : uint8
 {
 	ECP_MainWeapon UMETA(DisplayName = "MainWeapon"),
+	ECP_OffHandWeapon,
+	ECP_RightHand,
+	ECP_LeftHand,
+	ECP_RightFoot,
+	ECP_LeftFoot
 };
 
 UENUM(BlueprintType)
@@ -32,7 +37,7 @@ enum class ESpeedMode : uint8
 };
 
 UENUM(BlueprintType)
-enum class EDamegeType : uint8
+enum class EDamageType : uint8
 {
 	EDT_None,
 	EDT_MeleeDamage,

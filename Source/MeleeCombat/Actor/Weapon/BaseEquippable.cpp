@@ -14,7 +14,7 @@ ABaseEquippable::ABaseEquippable()
 
 	ItemSkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ItemSkeletalMesh"));
 	ItemStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemStaticMesh"));
-
+	RootComponent = ItemStaticMesh;
 }
 
 // Called when the game starts or when spawned

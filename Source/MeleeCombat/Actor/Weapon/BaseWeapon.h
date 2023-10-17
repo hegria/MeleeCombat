@@ -12,6 +12,9 @@ class UAnimMontage;
 class UCollisionComponent;
 class UCombatComponent;
 class UStateComponent;
+class UParticleSystemComponent;
+class UGameplayEffect;
+class UGameplayAbility;
 
 UCLASS()
 class MELEECOMBAT_API ABaseWeapon : public ABaseEquippable
@@ -31,12 +34,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void OnEquipped() override;
-	virtual void OnHit(FHitResult OnHit);
+	UFUNCTION()
+	virtual void OnHit(const FHitResult& OnHit);
 	void SimulateWeaponPhysics();
 	void ToggleCombat(bool EnableCombat);
 	virtual TArray<UAnimMontage*> GetActionMontage(FGameplayTag Tag);
-	void ActivateCollision();
-	void DeactivateCollision();
+	virtual void ActivateCollision(ECollisionPart CollisionPart);
+	virtual void DeactivateCollision(ECollisionPart CollisionPart);
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UAnimMontage> HitMontage_F;
@@ -56,8 +60,6 @@ public:
 	TObjectPtr<UAnimMontage> DefenseHitBrokenMontage;
 
 private:
-
-	ECombatType CombatType;
 
 	UPROPERTY(EditAnywhere)
 	FName HandSocketName;
@@ -83,10 +85,22 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TMap<FGameplayTag, float> ActionStateCost;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGameplayEffect> AttackEffect;
+	UPROPERTY(EditAnywhere)
+	float Damage;
+protected:
+	UPROPERTY(EditAnywhere)
+	ECombatType CombatType;
+	UPROPERTY(EditAnywhere)
+	EDamageType DamageType;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStateComponent> StateComponent;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCollisionComponent> CollisionComponent;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UParticleSystemComponent> ParticleComponent;
 	UPROPERTY()
 	TObjectPtr<UCombatComponent> CombatComponent;
 };

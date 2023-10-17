@@ -3,7 +3,7 @@
 
 #include "Component/CollisionComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "Interface/CombatAPI.h"
+#include "Interface/CombatInterface.h"
 #include "GameplayTagAssetInterface.h"
 
 // Sets default values for this component's properties
@@ -51,17 +51,19 @@ void UCollisionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 			true
 		);
 
+
 		if (isHit)
 		{
 			for (auto hit : OutHits) {
 				LastHit = hit;
 				if (!AlreadyHitActors.Contains(hit.GetActor())
-					&& Cast<IGameplayTagAssetInterface>(hit.GetActor())->HasMatchingGameplayTag(IgnoreGamePlayTag))
+					&& !Cast<IGameplayTagAssetInterface>(hit.GetActor())->HasMatchingGameplayTag(IgnoreGamePlayTag))
 				{
 					AlreadyHitActors.Add(hit.GetActor());
-					ICombatAPI* combatAPI = Cast<ICombatAPI>(hit.GetActor());
+					ICombatInterface* combatAPI = Cast<ICombatInterface>(hit.GetActor());
 					if (combatAPI) {
 						// Apply Effect
+						OnHit.Execute(hit);
 					}
 				}
 				

@@ -6,6 +6,8 @@
 #include "Character/MeleeAnimInstance.h"
 #include "Actor/Weapon/BaseWeapon.h"
 #include "Actor/Weapon/BaseConsumeable.h"
+#include "GameplayTagAssetInterface.h"
+#include "MeleeGameplayTags.h"
 
 // Sets default values for this component's properties
 UCombatComponent::UCombatComponent()
@@ -66,8 +68,8 @@ void UCombatComponent::SetCombatEnable(bool isCombatEnable)
 	UMeleeAnimInstance* Anim = Cast<UMeleeAnimInstance>(Char->GetMesh()->GetAnimInstance());
 
 	Anim->SetIsCombatEnabled(isCombatEnable);
-
-	//TODO AI
+	if (ToggledCombat.IsBound())
+		ToggledCombat.Execute(isCombatEnable);
 }
 
 void UCombatComponent::ResetAttack()
@@ -94,4 +96,3 @@ void UCombatComponent::ConsumeItem()
 {
 	Item->OnItemConsumed();
 }
-

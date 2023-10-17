@@ -13,5 +13,8 @@ UCLASS()
 class MELEECOMBAT_API AMeleePlayer : public ABaseCharacter
 {
 	GENERATED_BODY()
-	
+	virtual void InitAbilityActorInfo() override;
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 };

@@ -16,6 +16,7 @@ class UInputAction;
 class IEnemyInterface;
 class UMeleeInputConfig;
 class ABaseCharacter;
+class UMainHUD;
 //class UAuraAbilitySystemComponent;
 
 UCLASS()
@@ -27,9 +28,29 @@ class MELEECOMBAT_API AMeleePlayerController : public APlayerController
 	virtual void SetupInputComponent() override;
 	virtual void PlayerTick(float DeltaTime) override;
 
+public:
+	void InitHUD();
+
 protected:
 	void Move(const struct FInputActionValue& value);
 	void Look(const struct FInputActionValue& value);
+	void LightAttackTriggered(const struct FInputActionInstance& instance);
+	void LightAttackStarted(const struct FInputActionInstance& instance);
+
+	void JumpTriggered();
+	void JumpCompleted();
+	void ToggleCombatCompleted();
+	void InteractStarted();
+	void DodgeStarted();
+	void ToggleWalkStarted();
+	void SprintTriggered();
+	void SprintCompleted();
+	void HeavyAttackCompleted();
+	void ToggleLockStarted();
+	void BlockStarted();
+	void BlockCompleted();
+	void UseItemStarted();
+
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -40,6 +61,8 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> LookAction;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> LightClickAction;
 public:
 	void AbilityInputTagStarted(FGameplayTag InputTag);
 	void AbilityInputTagCompleted(FGameplayTag InputTag);
@@ -50,5 +73,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UMeleeInputConfig> InputConfig;
+
+	UPROPERTY()
+	TObjectPtr<UMainHUD> HUD;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UMainHUD> MainHUDClass;
 	
 };

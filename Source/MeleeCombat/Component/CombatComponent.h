@@ -8,6 +8,9 @@
 #include "CombatComponent.generated.h"
 
 
+
+DECLARE_DELEGATE_OneParam(FOnToggledCombat, bool);
+
 class ABaseWeapon;
 class ABaseConsumeable;
 
@@ -44,7 +47,11 @@ public:
 	FORCEINLINE bool IsCombatEnable() { return bIsCombatEnable; };
 	FORCEINLINE bool IsBlockingEnable() { return bIsBlockingEnable; };
 	
+	bool bIsWaitForAttack;
+	bool bIsAttackSaved;
 	int AttackCount;
+
+	FOnToggledCombat ToggledCombat;
 
 private:
 	UPROPERTY()
@@ -55,9 +62,7 @@ private:
 	TObjectPtr<ABaseConsumeable> Item;
 	
 	bool bIsCombatEnable;
-	bool bIsAttackSaved;
 	bool bIsBlockingEnable;
-	bool bIsWaitForAttack;
 
 	// TODO Callback
 };

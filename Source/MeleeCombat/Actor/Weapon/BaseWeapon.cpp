@@ -9,17 +9,26 @@
 #include "Character/MeleeAnimInstance.h"
 #include "Interface/CombatInterface.h"
 #include "MeleeGameplayTags.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABaseWeapon::ABaseWeapon()
 {
 	CollisionComponent = CreateDefaultSubobject<UCollisionComponent>(TEXT("CollisionComponent"));
+	ParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleComponent"));
+	ParticleComponent->SetupAttachment(ItemStaticMesh);
 }
 
 // Called when the game starts or when spawned
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CollisionComponent->OnHit.BindUFunction(this, FName("OnHit"));
 	
 }
 
@@ -43,11 +52,24 @@ void ABaseWeapon::OnEquipped()
 	CollisionComponent->AddActorsToIgnore(GetOwner());
 }
 
-void ABaseWeapon::OnHit(FHitResult OnHit)
+void ABaseWeapon::OnHit(const FHitResult& OnHit)
 {
-	if (Cast<ICombatInterface>(OnHit.GetActor())->CanRecieveDamage())
+	auto Combat = Cast<ICombatInterface>(OnHit.GetActor());
+	if (Combat->CanRecieveDamage())
 	{
 		// Todo Apply PointDamage
+		UAbilitySystemComponent* TargetASC =
+			UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OnHit.GetActor());
+		if (TargetASC == nullptr) return;
+
+		FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
+		EffectContextHandle.AddSourceObject(this);
+		const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(AttackEffect, 1, EffectContextHandle);
+		EffectSpecHandle.Data->SetByCallerTagMagnitudes.Add(GET_MELEE_TAG.Attributes_Amt_Health, -Damage);
+		TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+		Combat->HandlePointDamage(OnHit, Damage, DamageType, GetOwner()->GetActorLocation());
+		UGameplayStatics::ApplyDamage(OnHit.GetActor(), Damage, GetInstigatorController(), GetOwner(), UDamageType::StaticClass());
+		
 	}
 }
 
@@ -60,6 +82,8 @@ void ABaseWeapon::SimulateWeaponPhysics()
 void ABaseWeapon::ToggleCombat(bool EnableCombat)
 {
 	CombatComponent->SetCombatEnable(EnableCombat);
+
+
 }
 
 TArray<UAnimMontage*>ABaseWeapon::GetActionMontage(FGameplayTag Tag)
@@ -102,12 +126,12 @@ TArray<UAnimMontage*>ABaseWeapon::GetActionMontage(FGameplayTag Tag)
 	return ReturnMontage;
 }
 
-void ABaseWeapon::ActivateCollision()
+void ABaseWeapon::ActivateCollision(ECollisionPart CollsionPart)
 {
 	CollisionComponent->ActivateCollision();
 }
 
-void ABaseWeapon::DeactivateCollision()
+void ABaseWeapon::DeactivateCollision(ECollisionPart CollsionPart)
 {
 	CollisionComponent->DeactivateCollision();
 }
